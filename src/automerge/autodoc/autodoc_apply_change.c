@@ -17,5 +17,6 @@ Datum autodoc_apply_change(PG_FUNCTION_ARGS) {
 
   AMstackItem(&doc->stack, AMapplyChanges(doc->doc, &changes), _abort_cb,
               AMexpect(AM_VAL_TYPE_VOID));
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }

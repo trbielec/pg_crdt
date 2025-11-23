@@ -46,5 +46,6 @@ Datum autodoc_splice_text(PG_FUNCTION_ARGS) {
               AMspliceText(doc->doc, itemid, pos, del, AMstr(val_str)),
               _abort_cb, AMexpect(AM_VAL_TYPE_VOID));
 
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }

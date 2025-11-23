@@ -20,6 +20,13 @@ create extension if not exists automerge;
 /* Callback function for freeing autodoc arrays. */
 static void autodoc_free_context_callback(void *);
 
+/* Invalidate the flat cache when document is modified.
+ * This ensures that the next save operation will regenerate the binary data
+ * from the current document state, rather than using stale cached data. */
+void invalidate_flat_cache(autodoc_Autodoc *doc) {
+  doc->flat_size = 0;
+}
+
 /* Expanded Object Header "methods" for flattening for storage */
 static Size autodoc_get_flat_size(ExpandedObjectHeader *eohptr);
 

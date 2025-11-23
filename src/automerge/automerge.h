@@ -4,6 +4,7 @@
 #include "postgres.h"
 #include "fmgr.h"
 #include "funcapi.h"
+#include "miscadmin.h"
 #include "utils/expandeddatum.h"
 #include "utils/lsyscache.h"
 #include "utils/jsonb.h"

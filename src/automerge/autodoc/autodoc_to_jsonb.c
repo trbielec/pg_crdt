@@ -40,6 +40,8 @@ static JsonbValue *_am_walk_map(autodoc_Autodoc *doc, AMobjId const *objid,
   double floatv;
   bool boolv;
 
+  check_stack_depth();
+
   keys =
       AMstackItems(&doc->stack, AMkeys(doc->doc, objid, NULL), _abort_cb, NULL);
 
@@ -179,6 +181,8 @@ static JsonbValue *_am_walk_list(autodoc_Autodoc *doc, AMobjId const *objid,
   double floatv;
   bool boolv;
 
+  check_stack_depth();
+
   items =
       AMstackItems(&doc->stack, AMlistRange(doc->doc, objid, 0, SIZE_MAX, NULL),
                    _abort_cb, NULL);
@@ -202,6 +206,22 @@ static JsonbValue *_am_walk_list(autodoc_Autodoc *doc, AMobjId const *objid,
         break;
       case AM_OBJ_TYPE_LIST:
         _am_walk_list(doc, itemid, state);
+        break;
+      case AM_OBJ_TYPE_TEXT:
+        /* Handle Text objects in lists */
+        if (AMitemToStr(AMstackItem(&doc->stack, AMtext(doc->doc, itemid, NULL),
+                                    _abort_cb, AMexpect(AM_VAL_TYPE_STR)),
+                        &bs)) {
+          str = palloc(bs.count + 1);
+          memcpy(str, bs.src, bs.count);
+          str[bs.count] = '\0';
+          val.type = jbvString;
+          val.val.string.val = str;
+          val.val.string.len = bs.count;
+          pushJsonbValue(&state, WJB_ELEM, &val);
+        } else {
+          ereport(ERROR, (errmsg("AMitemToStr failed for Text object")));
+        }
         break;
       default:
         break;

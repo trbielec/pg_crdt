@@ -26,6 +26,7 @@ Datum autodoc_from_jsonb(PG_FUNCTION_ARGS) {
                 _abort_cb, AMexpect(AM_VAL_TYPE_CHANGE_HASH));
   }
 
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }
 
@@ -64,6 +65,8 @@ static void _object_walk(JsonbIterator **it, autodoc_Autodoc *doc,
   char *key = NULL;
   AMobjId const *newobjid;
 
+  check_stack_depth();
+
   while ((r = JsonbIteratorNext(it, &v, false)) != WJB_DONE) {
     switch (r) {
     case WJB_KEY:
@@ -100,7 +103,9 @@ static void _object_walk(JsonbIterator **it, autodoc_Autodoc *doc,
       case jbvString:
         AMstackItem(
             NULL,
-            AMmapPutStr(doc->doc, objid, AMstr(key), AMstr(v.val.string.val)),
+            AMmapPutStr(doc->doc, objid, AMstr(key),
+                        AMbytes((const unsigned char *)v.val.string.val,
+                                v.val.string.len)),
             _abort_cb, AMexpect(AM_VAL_TYPE_VOID));
         break;
       case jbvNumeric: {
@@ -152,6 +157,8 @@ static void _array_walk(JsonbIterator **it, autodoc_Autodoc *doc,
   JsonbValue v;
   JsonbIteratorToken r;
   AMobjId const *newobjid;
+
+  check_stack_depth();
 
   while ((r = JsonbIteratorNext(it, &v, false)) != WJB_DONE) {
     switch (r) {

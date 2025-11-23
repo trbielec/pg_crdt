@@ -46,6 +46,9 @@ new_expanded_autodoc(autodoc_FlatAutodoc* flat, MemoryContext parentcontext);
 /* Helper function that either detoasts or expands. */
 autodoc_Autodoc *DatumGetAutodoc(Datum d);
 
+/* Invalidate the flat cache when document is modified */
+void invalidate_flat_cache(autodoc_Autodoc *doc);
+
 /* Helper macro to detoast and expand autodocs arguments */
 #define AUTODOC_GETARG(n)  DatumGetAutodoc(PG_GETARG_DATUM(n))
 

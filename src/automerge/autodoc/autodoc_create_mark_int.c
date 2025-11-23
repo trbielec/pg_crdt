@@ -49,5 +49,6 @@ Datum autodoc_create_mark_int(PG_FUNCTION_ARGS) {
                            AMstr(text_to_cstring(name)), valitem),
               _abort_cb, AMexpect(AM_VAL_TYPE_VOID));
 
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }

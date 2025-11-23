@@ -26,5 +26,6 @@ Datum autodoc_in(PG_FUNCTION_ARGS) {
                             AMexpect(AM_VAL_TYPE_DOC)),
                 &doc->doc);
   }
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }

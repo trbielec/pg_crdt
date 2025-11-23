@@ -113,5 +113,6 @@ Datum autodoc_inc_counter(PG_FUNCTION_ARGS) {
   val = PG_GETARG_INT64(2);
 
   doc = _autodoc_traverse_inc_counter(doc, AM_ROOT, text_to_cstring(path), val);
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }

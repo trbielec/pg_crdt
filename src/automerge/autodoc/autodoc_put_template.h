@@ -8,7 +8,7 @@ Datum FN(autodoc_put)(PG_FUNCTION_ARGS)
 	text *path;
 	_PG_TYPE val;
 	bool insert = true;
-	text *message;
+	text *message = NULL;
 
 	LOGF();
 	doc = AUTODOC_GETARG(0);
@@ -28,9 +28,10 @@ Datum FN(autodoc_put)(PG_FUNCTION_ARGS)
 		AMstackItem(&doc->stack,
 					AMcommit(doc->doc, AMstr(text_to_cstring(message)), NULL),
 					_abort_cb,
-					NULL);
+					AMexpect(AM_VAL_TYPE_CHANGE_HASH));
 	}
 
+	invalidate_flat_cache(doc);
 	AUTODOC_RETURN(doc);
 }
 

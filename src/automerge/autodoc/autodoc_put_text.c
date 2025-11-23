@@ -19,6 +19,7 @@ Datum autodoc_put_text(PG_FUNCTION_ARGS) {
 
   doc = _autodoc_traverse_put_text(doc, AM_ROOT, text_to_cstring(key),
                                    text_to_cstring(val), true);
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }
 

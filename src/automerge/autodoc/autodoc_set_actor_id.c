@@ -22,6 +22,7 @@ Datum autodoc_set_actor_id(PG_FUNCTION_ARGS) {
   AMstackItem(&doc->stack, AMsetActorId(doc->doc, actor_id), _abort_cb,
               AMexpect(AM_VAL_TYPE_VOID));
 
+  invalidate_flat_cache(doc);
   AUTODOC_RETURN(doc);
 }
 
