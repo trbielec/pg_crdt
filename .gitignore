@@ -5,3 +5,11 @@
 **/*.rs.bk
 Cargo.lock
 *.swp
+
+# PostgreSQL extension build artifacts
+*.o
+*.bc
+*.so
+results/
+regression.diffs
+regression.out
