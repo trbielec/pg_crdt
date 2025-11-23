@@ -184,6 +184,14 @@ RETURNS TABLE(name text, start_pos bigint, end_pos bigint, val jsonb)
 AS '$libdir/automerge', 'autodoc_get_marks'
 LANGUAGE C STRICT;
 
+-- Optimization #2: History Pruning
+-- Warning: This creates a new document with new Actor IDs. 
+-- Syncing with previous versions will break.
+CREATE FUNCTION squash_history(autodoc)
+RETURNS autodoc
+AS '$libdir/automerge', 'autodoc_squash_history'
+LANGUAGE C STRICT;
+
 CREATE FUNCTION from_jsonb(jsonb, commit_message text)
 RETURNS autodoc
 AS '$libdir/automerge', 'autodoc_from_jsonb'

@@ -28,6 +28,12 @@ typedef struct autodoc_Autodoc  {
 	AMstack *stack;
 	Size flat_size;
 	unsigned char *flat_data;
+
+	/* Append-Only Optimization State */
+	uint8_t *base_data;      /* The binary we loaded from */
+	Size base_len;
+	/* Note: We don't store base_heads because AMitems iterators can become
+	 * invalid. Instead, we temporarily load base_data to get its heads when needed. */
 } autodoc_Autodoc;
 
 typedef struct autodoc_ChangesState {
